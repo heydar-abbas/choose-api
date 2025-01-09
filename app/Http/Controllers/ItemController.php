@@ -18,6 +18,14 @@ class ItemController extends Controller
     }
 
 
+    public function show($id)
+    {
+        return new ItemResource(
+            Item::findOrfail($id)
+        );
+    }
+
+
     public function store(StoreItemRequest $request)
     {
         Item::create($request->validated());

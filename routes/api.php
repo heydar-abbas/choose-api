@@ -44,20 +44,12 @@ Route::get('/categories', function () {
     );
 })->name('categories');
 
-Route::get('/restaurant/{restaurantId}/items', function ($restaurantId) {
-    return ItemResource::collection(
-        Item::where('restaurant_id', $restaurantId)->get()
-    );
-})->name('restaurant.items');
-
-Route::get('/item/{item}', function (Item $item) {
-    return new ItemResource($item);
-})->name('item.show');
-
-Route::get("/item/restaurant/{id}", function ($id) {
+Route::get('/restaurant/{id}/items', function ($id) {
     return ItemResource::collection(
         Item::where('restaurant_id', $id)->get()
     );
 })->name('restaurant.items');
+
+Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.show');
 
 require __DIR__ . '/auth.php';
