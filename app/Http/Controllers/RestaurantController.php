@@ -19,6 +19,14 @@ class RestaurantController extends Controller
     }
 
 
+    public function show($id)
+    {
+        return new RestaurantResource(
+            Restaurant::findOrfail($id)
+        );
+    }
+
+
     public function store(StoreRestaurantRequest $request)
     {
         Restaurant::create($request->validated());

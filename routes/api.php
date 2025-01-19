@@ -30,7 +30,7 @@ Route::get('/allcities', function () {
     return CityResource::collection(
         City::all()
     );
-})->name('allcities');
+})->name('all.cities');
 
 Route::get('/c/restaurants/{cityId}', function ($cityId) {
     return RestaurantResource::collection(
@@ -43,6 +43,9 @@ Route::get('/categories', function () {
         Category::all()
     );
 })->name('categories');
+
+Route::get('/restaurant/{id}', [RestaurantController::class, 'show'])
+    ->name('restaurant.show');
 
 Route::get('/restaurant/{id}/items', function ($id) {
     return ItemResource::collection(
