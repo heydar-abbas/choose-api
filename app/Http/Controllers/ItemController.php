@@ -6,15 +6,33 @@ use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Http\Resources\ItemResource;
 use App\Models\Item;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return ItemResource::collection(
-            Item::where('user_id', Auth::id())->get()
-        );
+        $query = Item::query();
+        $request->validate([
+            'field' => ['in:id,title,category,price,restaurant_id'],
+            'direction' => ['in:asc,desc']
+        ]);
+
+        if ($s = $request->search) {
+            $query->whereRaw("title LIKE '%$s%'");
+        }
+
+        if ($request->has(['field', 'direction'])) {
+            $query->orderBy($request->field, $request->direction);
+        }
+
+        return response([
+            'items' => ItemResource::collection(
+                $query->where('user_id', Auth::id())->get()
+            ),
+            'filters' => $request->all(['search', 'field', 'direction'])
+        ]);
     }
 
 
